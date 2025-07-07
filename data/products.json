@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "EchoPulse Wireless Headphones",
+    "price": 0.1,
+    "description": "string",
+    "category": "string",
+    "image": "http://example.com"
+  },
+  {
+    "id": 2,
+    "title": "NimbusGlow Desk Lamp",
+    "price": 0.1,
+    "description": "string",
+    "category": "string",
+    "image": "http://example.com"
+  },
+  {
+    "id": 3,
+    "title": "Velvet Blaze Sneakers",
+    "price": 0.1,
+    "description": "string",
+    "category": "string",
+    "image": "http://example.com"
+  },
+  {
+    "id": 4,
+    "title": "FrostByte Gaming Gloves",
+    "price": 0.1,
+    "description": "string",
+    "category": "string",
+    "image": "http://example.com"
+  },
+  {
+    "id": 5,
+    "title": "BrewNest Smart Watch",
+    "price": 0.1,
+    "description": "string",
+    "category": "string",
+    "image": "http://example.com"
+  }
+]
