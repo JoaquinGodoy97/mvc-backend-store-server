@@ -1,31 +1,38 @@
 // products.model.js
-import fs from 'fs';
-import path from 'path';
+import { getDocs, collection } from "firebase/firestore";
+import db from "./db.js"; // your Firestore instance
 
-const __dirname = import.meta.dirname;
-// Ruta al archivo JSON que simula la "base de datos"
-const dataPath = path.join(__dirname, '../../data/products.json');
+const productsCollection = doc(db, "products");
 
 // Método para buscar un producto por su ID
 export function getProductById(id) {
-const products = getAllProducts();
-const product = products.find(product => product.id == id);
-console.log(product)
-return product;
-
+    const products = getAllProducts();
+    const product = products.find(product => product.id == id);
+    console.log(product)
+    return product;
 };
 // Método para obtener todos los productos
-export function getAllProducts() {
-const data = fs.readFileSync(dataPath, 'utf-8');
-return JSON.parse(data);
+export async function getAllProducts() {
+
+    try {
+    const snapshot = await getDocs(collection(db, "products"));
+    const products = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+
+    return products;
+
+    } catch (error) {
+    console.error("Error fetching products:", error);
+    }
+
 };
 
 // Método para guardar un producto en el archivo JSON
-export function saveProduct(productData) {
-const products = getAllProducts();
-products.push(productData);
-fs.writeFileSync(dataPath, JSON.stringify(products, null, 2));
-};
+export async function saveProduct(productData) { 
+    await setDoc(productsCollection, productData ); 
+    };
 
 // JSON file Format 
 // {

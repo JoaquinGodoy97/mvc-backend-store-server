@@ -5,7 +5,7 @@ export const getAllProducts = async (req, res) => {
     const products = await productsService.getAllProducts();
     res.status(200).json(products);
     } catch (error) {
-        console.error('🛑 Error in controller:', error.message);
+        console.error('Error in controller:', error.message);
         res.status(500).json({ message: 'Server error loading products' });
     }
 }
