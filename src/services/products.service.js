@@ -13,10 +13,10 @@ export const getProductById = async (id) => {
 
 export const createProduct = async (productData) => {
 
-    const productLength = productsModel.getAllProducts().length;
+    const productLength = await productsModel.getAllProducts();
 
     const newProduct = {
-        id: productLength + 1,
+        id: productLength.length + 1,
         title: productData.title,
         price: productData.price,
         description: productData.description,
@@ -25,13 +25,14 @@ export const createProduct = async (productData) => {
     };
 
     // products.push(newProduct);
-    productsModel.saveProduct(newProduct);
+    await productsModel.saveProduct(newProduct);
 
     return newProduct;
 };
 
 export const deleteProduct = async (id) => {
-    return productsModel.deleteProduct(id); // add a message that it was deleted successfully
+    return await productsModel.deleteProduct(id); // add a message that it was deleted successfully
+
 };
 
 export default router;

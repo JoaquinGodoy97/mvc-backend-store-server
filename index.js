@@ -9,26 +9,15 @@ import productsRouter from './src/routes/products.routes.js';
 const PORT = process.env.PORT || 3000;
 const FRONT_END_URL = process.env.FRONT_END_URL;
 
-// Inicia Node.js y configura npm usando el comando npm init -y.
-// Agrega la propiedad "type": "module" en el archivo package.json para habilitar ESModules.
-// Configura un script llamado start para ejecutar el programa con el comando npm run start.
-// DONE in PACKAGE.JSON
+// Instala jsonwebtoken
 
-
-// Instala express, cors, body-parser, dotenv, firebase y jsonwebtoken como dependencias del proyecto.
-// SO FAR CORS, EXPRESS, BODY-PARSER INSTALLED
 //-----------------------------------------------------------------------------------------------------
-
-// Crea un servidor web con express y realiza su configuración en el archivo index.js.
-// Crea un archivo .env donde se alojarán las variables de entorno del proyecto."""
 
 const app = express();
 
-// CORS IF NEEDED SPECIFIC ORIGINS (NOT DONE YET)
 // Configura CORS para habilitar las peticiones de origen cruzado, así las aplicaciones Frontend de la empresa pueden consultar al servicio sin problemas.
-
 const corsOptions = {
-    origin: [FRONT_END_URL, 'https://anotherdomain.com'],
+    origin: [FRONT_END_URL],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     // allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -44,7 +33,6 @@ const server = http.createServer((req, res) => {
 });
 
 app.use(cors(corsOptions));
-// Configura el middleware global de body-parser para interpretar los body en formato JSON de las peticiones.
 app.use(bodyParser.json());
 
 
