@@ -15,7 +15,7 @@ export async function getAllProducts() {
     try {
     const snapshot = await getDocs(productsCollection);
     const products = snapshot.docs.map(doc => ({
-        id: doc.id,
+        docId: doc.id,
         ...doc.data()
     }));
 
@@ -45,10 +45,13 @@ export async function saveProduct(productData) {
 // Método para eliminar un producto por su ID
 export async function deleteProduct(id) {
     const products = await getAllProducts();
-    const productFound = products.find(product => product.id == id);
+    const foundProduct = products.find(product => product.id == id);
 
-    const productRef = doc(db, "products", id)
-    console.log(productFound)
+    if (!foundProduct) {
+        throw new Error(`Product with ID ${id} not found`);
+    }
+    const productRef = doc(db, "products", foundProduct.docId)
+
     await deleteDoc(productRef);
-    return productFound;
+    return foundProduct;
 };
