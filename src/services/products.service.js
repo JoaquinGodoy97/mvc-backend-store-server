@@ -13,26 +13,36 @@ export const getProductById = async (id) => {
 
 export const createProduct = async (productData) => {
 
-    const productLength = await productsModel.getAllProducts();
+    let products = [];
+    try {
+        products = await productsModel.getAllProducts();
+    } catch (err) {
+        if (err.message === "No products here.") {
+            products = [];
+        } else {
+            throw err;
+        }
+    }
+
+    // const lastProductId = products[products.length]
+    const maxId = products.length > 0 ? Math.max(...products.map(product => product.id)) : 0;
 
     const newProduct = {
-        id: productLength.length + 1,
-        title: productData.title,
-        price: productData.price,
-        description: productData.description,
-        category: productData.category,
-        image: productData.image
-    };
+            id: products.length > 0 ? maxId + 1 : 1,
+            title: productData.title,
+            price: productData.price,
+            description: productData.description,
+            category: productData.category,
+            image: productData.image
+        };
 
-    // products.push(newProduct);
     await productsModel.saveProduct(newProduct);
 
-    return newProduct;
+    return newProduct
 };
 
 export const deleteProduct = async (id) => {
-    return await productsModel.deleteProduct(id); // add a message that it was deleted successfully
-
+    return await productsModel.deleteProduct(id);
 };
 
 export default router;
