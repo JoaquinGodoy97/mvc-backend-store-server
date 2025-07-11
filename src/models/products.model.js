@@ -1,46 +1,51 @@
-// products.model.js
-import fs from 'fs';
-import path from 'path';
+import { getDocs, addDoc, deleteDoc, doc, collection } from "firebase/firestore";
+import db from "../../db.js";
 
-const __dirname = import.meta.dirname;
-// Ruta al archivo JSON que simula la "base de datos"
-const dataPath = path.join(__dirname, '../../data/products.json');
+const productsCollection = collection(db, "products");
 
-// Método para buscar un producto por su ID
-export function getProductById(id) {
-const products = getAllProducts();
-const product = products.find(product => product.id == id);
-console.log(product)
-return product;
+export async function getProductById(id) {
+    const products = await getAllProducts();
 
-};
-// Método para obtener todos los productos
-export function getAllProducts() {
-const data = fs.readFileSync(dataPath, 'utf-8');
-return JSON.parse(data);
+    const product = products.find(product => product.id == id);
+    return product;
 };
 
-// Método para guardar un producto en el archivo JSON
-export function saveProduct(productData) {
-const products = getAllProducts();
-products.push(productData);
-fs.writeFileSync(dataPath, JSON.stringify(products, null, 2));
+export async function getAllProducts() {
+    const snapshot = await getDocs(productsCollection);
+
+    if (snapshot.empty) {
+        const error = new Error('No products available yet.');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const products = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+
+    return products
 };
 
-// JSON file Format 
-// {
-//         "title": "New Striped Shirt for Women",
-//         "price": 2,
-//         "description": "bla bla bla",
-//         "category": "clothes",
-//         "image": "http://example.com"
-// }
+export async function saveProduct(productData) { 
+    const addedProduct = await addDoc(productsCollection, productData);
+    const productId = addedProduct.path.split("/")[1];
+    return `Added product ${productData.title} with ID ${productId}`;
+    };
 
-// Método para eliminar un producto por su ID
-export function deleteProduct(id) {
-const products = getAllProducts();
-const productFound = products.find(product => product.id == id);
-const filteredProducts = products.filter(product => product.id != id);
-fs.writeFileSync(dataPath, JSON.stringify(filteredProducts, null, 2));
-return `${productFound.title} deleted sucessfully.`;
+export async function deleteProduct(id) {
+    const products = await getAllProducts();
+
+    const foundProduct = products.find(product => product.id === id);
+
+    if (!foundProduct) {
+        const error = new Error(`Product with ID ${id} not found`);
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const productRef = doc(db, "products", foundProduct.id)
+    
+    await deleteDoc(productRef);
+    return foundProduct;
 };
