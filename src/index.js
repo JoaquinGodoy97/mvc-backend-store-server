@@ -1,13 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import * as http from 'node:http'
 import 'dotenv/config'
 
-import productsRouter from './src/routes/products.routes.js';
-import authRouter from './src/routes/auth.routes.js';
+import productsRouter from './routes/products.routes.js';
+import authRouter from './routes/auth.routes.js';
 
-import { authentication } from './src/middleware/authentication.js'
+import { authentication } from './middleware/authentication.js'
 
 const PORT = process.env.PORT || 3000;
 const FRONT_END_URL = process.env.FRONT_END_URL;
