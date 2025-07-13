@@ -23,11 +23,20 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 app.use('/api/products', authentication, productsRouter);
 app.use('/auth', authRouter);
 
+
+//Not found route
 app.use((req, res, next) => {
-    res.status(404).json({ message: 'Ruta no encontrada o invalida.' });
+    res.status(404).json({ message: 'Route Not Found.' });
+});
+
+//Json error with traceback or 500
+app.use((err, req, res, next) => {
+    res.status(err.status || 500).json({
+        message: err.message || 'Internal Server Error.',
+    });
 });

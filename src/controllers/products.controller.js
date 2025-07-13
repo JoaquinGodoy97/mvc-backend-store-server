@@ -18,7 +18,8 @@ export const getProductById = async (req, res) => {
         res.status(200).json(product);
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        const status = error.statusCode || 500;
+        res.status(status).json({ message: error.message });
     }
     
 };

@@ -6,15 +6,22 @@ const productsCollection = collection(db, "products");
 export async function getProductById(id) {
     const products = await getAllProducts();
 
-    const product = products.find(product => product.id == id);
-    return product;
+    const productById = products.find(product => product.id == id);
+
+    if (!productById) {
+        const error = new Error('No product found with such ID.');
+        error.statusCode = 404;
+        throw error
+    }
+
+    return productById;
 };
 
 export async function getAllProducts() {
     const snapshot = await getDocs(productsCollection);
 
     if (snapshot.empty) {
-        const error = new Error('No products available yet.');
+        const error = new Error('No products uploaded yet.');
         error.statusCode = 404;
         throw error;
     }
@@ -30,12 +37,13 @@ export async function getAllProducts() {
 export async function saveProduct(productData) { 
     const addedProduct = await addDoc(productsCollection, productData);
     const productId = addedProduct.path.split("/")[1];
-    return `Added product ${productData.title} with ID ${productId}`;
+    productData.id = productId;
+    return productData;
     };
 
 export async function deleteProduct(id) {
+    
     const products = await getAllProducts();
-
     const foundProduct = products.find(product => product.id === id);
 
     if (!foundProduct) {
