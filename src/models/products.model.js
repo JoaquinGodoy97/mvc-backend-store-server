@@ -8,7 +8,7 @@ export async function getProductById(id) {
     const productRef = doc(db, "products", id);
     const productSnap = await getDoc(productRef);
 
-    if (!productSnap) {
+    if (!productSnap.exists()) {
         const error = new Error('No product found with such ID.');
         error.statusCode = 404;
         throw error
