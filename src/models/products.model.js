@@ -1,20 +1,23 @@
-import { getDocs, addDoc, deleteDoc, doc, collection } from "firebase/firestore";
+import { getDocs, addDoc, deleteDoc, doc, collection, getDoc } from "firebase/firestore";
 import db from "../db.js";
 
 const productsCollection = collection(db, "products");
 
 export async function getProductById(id) {
-    const products = await getAllProducts();
 
-    const productById = products.find(product => product.id == id);
+    const productRef = doc(db, "products", id);
+    const productSnap = await getDoc(productRef);
 
-    if (!productById) {
+    if (!productSnap) {
         const error = new Error('No product found with such ID.');
         error.statusCode = 404;
         throw error
     }
 
-    return productById;
+    return {
+        id: productSnap.id,
+        ...productSnap.data(),
+    };
 };
 
 export async function getAllProducts() {
